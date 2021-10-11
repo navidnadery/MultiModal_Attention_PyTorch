@@ -1,4 +1,5 @@
 import torch
+import numpy as np
 from torch import nn
 from torch.nn.functional import softmax
 
@@ -23,7 +24,7 @@ class SingleHeadAttention(nn.Module):
     querys = x3 @ self.w_query
     values = self.w_value @ x1
     attn_scores = querys[:,:,None] * keys[:,:,:,None]
-    attn_scores = attn_scores.sum(dim=1)
+    attn_scores = attn_scores.sum(dim=1)  / np.sqrt(attn_scores.shape[1])
     attn_scores_softmax = softmax(attn_scores, dim=1)
     outputs = values @ attn_scores_softmax
     if self.verbos:

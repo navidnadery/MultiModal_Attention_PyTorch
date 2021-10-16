@@ -35,10 +35,12 @@ Initialize some random matrix as inputs or prepare your input such that:
 **NOTE**
 
 Input features should be as batch first, the output is the same.
+Input shape is as follow:
+`batch, sequence_length,input_channel(neurons)`
 <p style="color:blue">Example input features</p>
 
 ```
-x1 = torch.rand([batch_size, inp_ch, inp_seq], dtype=torch.float32)
+x1 = torch.rand([batch_size, inp_seq, inp_ch], dtype=torch.float32)
 x2 = torch.rand([batch_size, key_dim[0], key_dim[1]], dtype=torch.float32)
 x3 = torch.rand([batch_size, que_dim[0], que_dim[1]], dtype=torch.float32)
 out = att_module(x1, x2, x3)

@@ -13,16 +13,16 @@ class SingleHeadAttention(nn.Module):
     self.k, self.u = que_dim
     self.m = out_ch
     self.o = out_seq
-    self.w_key = torch.rand([self.s, self.T], dtype=torch.float32)
-    self.w_query = torch.rand([self.u, self.o], dtype=torch.float32)
-    self.w_value = torch.rand([self.m, self.N], dtype=torch.float32)
+    self.w_key = nn.Parameter(torch.randn([self.s, self.T]))
+    self.w_query = nn.Parameter(torch.randn([self.u, self.o]))
+    self.w_value = nn.Parameter(torch.randn([self.m, self.N]))
     self.verbos = verbos
 
   def forward(self, input, key, query):
     x1, x2, x3 = input, key, query
     keys = x2 @ self.w_key
     querys = x3 @ self.w_query
-    values = self.w_value @ x1
+    values = (x1 @ self.w_value.T).transpose(1,2)
     attn_scores = querys[:,:,None] * keys[:,:,:,None]
     attn_scores = attn_scores.sum(dim=1)  / np.sqrt(attn_scores.shape[1])
     attn_scores_softmax = softmax(attn_scores, dim=1)
@@ -32,3 +32,4 @@ class SingleHeadAttention(nn.Module):
       print(f"query is:  {querys.shape}")
       print(f"value is:  {values.shape}")
       print(f"output is: {outputs.shape}")
+    return outputs
